@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>King's Bites</title>
+<link rel="stylesheet" type="text/css" href="Burger.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+<body>
+	<div class="page">
+		<header>
+			<div class="headcontainer">
+				<div class="title">KING'S BITES</div>
+				<div class="tag">Slaving people's tongue since 2001</div>
+			</div>
+		</header>
+		<div class="bodycontainer">
+			<div class="welcome">
+				<p>We welcome you to the gateway of slavery</p>
+			</div>
+			<div class="orderDiv">
+				<p>Select the burger you want to order</p>
+				<input type="button" value="ORDER NOW" id="ordernow"
+					onclick="makeOrder()"> 
+
+			</div>
+		</div>
+
+
+	</div>
+	<script type="text/javascript">
+//-------------------------------------Initialize variables----------------------------------------------------------------		
+		var br=$('<br/>');
+		var type;
+		var crust;
+		var filling;
+		var topping=[];
+		var total;
+		
+		var price=new Map();
+		price.set("Hard",10);
+		price.set("Thin",10);
+		price.set("Soft",12);
+		price.set("Chicken Tikka",120);
+		price.set("Paneer Tikka",100);
+		price.set("Turkey Meat",130);
+		price.set("Cucumber",25);
+		price.set("Tomato",20);
+		price.set("Meat strip",45);
+		price.set("Cabbage",20);
+//----------------------------------------Div update methods--------------------------------------------------------------------
+	function updateOnDiv(... option){
+			$('.orderDiv').empty();
+			$('.orderDiv').append(option);
+		}
+		function finalDiv(... option){
+			$('.orderDiv').append(option);
+		}
+//----------------------------------------Burger of the day util methods-------------------------------------------------------
+		
+		function orderConfirmation(){
+			updateOnDiv($('<p/>').text('Your order is placed'));;
+		}
+//--------------------------------------------Customer choice----------------------------------------------------
+		function makeOrder(){
+			var option1=$('<button/>').attr({id:'customBurger' ,onclick:'makeCustomBurger()'}).text('Create own Burger');
+				
+			var option2=$('<button/>').attr({id:'burgerOfTheDay' ,onclick:'makeBurgerOfTheDay()'}).text('Burger Of The Day');
+			updateOnDiv(option1,option2);
+		}
+//--------------------------------------------Burger of the day------------------------------------------------		
+		function makeBurgerOfTheDay(){
+			$('.orderDiv').empty();
+			
+			var crusts=['Hard','Thin','Soft'];
+			crust=crusts[Math.floor(Math.random()*crusts.length)];
+			console.log('crust '+crust);
+			
+			var fillings=['Chicken Tikka','Paneer Tikka','Turkey Meat'];
+			filling=fillings[Math.floor(Math.random()*fillings.length)];
+			console.log('filling '+fillings);
+			
+			var toppings=['Cucumber','Tomato','Meat strip','Cabbage'];
+			topping.push(toppings[Math.floor(Math.random()*toppings.length)]);
+			console.log('topping '+topping);
+
+			
+			generateBill(crust,filling,topping);
+			var order=$('<input/>').attr({id:'confirm',type:'button',value:'Place Order',onclick:'orderConfirmation()'});
+			var back=$('<input/>').attr({id:'back',type:'button',value:'Back',onclick:'makeOrder()'});
+			finalDiv(back);	
+		}
+		
+//--------------------------------------------Custom Burger-----------------------------------------------------------
+		
+		function makeCustomBurger(){
+			var typeOption1=$('<button/>').attr({id:'veg', onclick:'makeBurger("Veg Burger")'}).text('Veg Burger');
+				
+			var typeOption2=$('<button/>').attr({id:'nonveg', onclick:'makeBurger("Non-Veg Burger")'}).text('Non-Veg Burger');
+			updateOnDiv(typeOption1,typeOption2);	
+		}
+		
+		function makeBurger(burgerType){
+			type=burgerType;
+			$('.orderDiv').empty();
+			
+			createCrust(burgerType);
+			createFillings(burgerType);		
+			createToppings(burgerType);
+			
+			var submit=$('<input>').attr({id:'invoice',type:'button' ,value:"Order",onclick:'placeOrder()'});
+			finalDiv(submit);
+			
+		}
+//---------------------------------------------Burger components creation---------------------------------------------------		
+		function createCrust(burgerType){
+			var crust1=$('<input>').attr({id:'hard',type:'radio', name :'crust',onclick:'crust="Hard"'});
+			var label1=$('<label/>').text('Hard - ₹10');
+			finalDiv(crust1,label1);
+			
+			var crust2=$('<input>').attr({id:'thin',type:'radio',name :'crust', onclick:'crust="Thin"'});
+			var label2=$('<label/>').text('Thin - ₹10');
+			finalDiv(crust2,label2);
+
+			var crust3=$('<input>').attr({id:'soft',type:'radio', name :'crust',onclick:'crust="Soft"'});
+			var label3=$('<label/>').text('Soft - ₹12');
+			finalDiv(crust3,label3,br);
+
+		}
+		
+		function createFillings(burgerType){
+			if(burgerType==='Veg Burger'){
+
+				var filing2=$('<input>').attr({id:'panneer',type:'radio',name :'filling', onclick:'filling="Paneer Tikka"'});
+				var label2=$('<label/>').text('Paneer Tikka - ₹100');
+				finalDiv(filing2,label2,br);
+				
+			}else{
+				
+				var filing1=$('<input>').attr({id:'chicken',type:'radio', name :'filling',onclick:'filling="Chicken Tikka"'});
+				var label1=$('<label/>').text('Chicken Tikka - ₹120');
+				finalDiv(filing1,label1);
+	
+	
+				var filing3=$('<input>').attr({id:'turkey',type:'radio', name :'filling',onclick:'filling="Turkey Meat"'});
+				var label3=$('<label/>').text('Turkey Meat - ₹130');
+				finalDiv(filing3,label3,br);
+				
+			}
+
+		}
+		function createToppings(burgerType){
+			if(burgerType==='Non-Veg Burger'){
+				var topping3=$('<input>').attr({class:'topping',id:'meat',type:'checkbox', name :'topping',onclick:'topping.push("Meat strip")'});
+				var label3=$('<label/>').text('Meat strip - ₹45');
+				finalDiv(topping3,label3);
+				
+			}
+			var topping1=$('<input>').attr({class:'topping',id:'cucumber',type:'checkbox', name :'topping',onclick:'topping.push("Cucumber")'});
+			var label1=$('<label/>').text('Cucumber - ₹25');
+			finalDiv(topping1,label1);
+
+
+			var topping2=$('<input>').attr({class:'topping',id:'tomato',type:'checkbox',name :'topping', onclick:'topping.push("Tomato")'});
+			var label2=$('<label/>').text('Tomato - ₹20');
+			finalDiv(topping2,label2);
+
+			
+			var topping4=$('<input>').attr({class:'topping',id:'cabbage',type:'checkbox', name :'topping',onclick:'topping.push("Cabbage")'});
+			var label4=$('<label/>').text('Cabbage - ₹20');
+			finalDiv(topping4,label4,br);
+			
+			var back=$('<input/>').attr({id:'back',type:'button',value:'Back',onclick:'makeCustomBurger()'});
+			var exit=$('<input/>').attr({id:'exit',type:'button',value:'Exit',onclick:'makeOrder()'});
+			finalDiv(back,exit);
+			
+			var limit = 3;
+			$('input[type=checkbox]').on('change', function (e) {
+			    if ($('input[type=checkbox]:checked').length > limit) {
+			        $(this).prop('checked', false);
+			        alert("allowed only 3");
+			    }
+			});
+			
+		}
+		
+		function placeOrder(){
+			if($("#veg").prop("checked")){
+				$('input[type=checkbox]:checked').each(function(i){
+					topping[i] = $(this).val();
+	        })};
+	        
+	        if($("#nonveg").prop("checked")){
+				$('input[type=checkbox]:checked').each(function(i){
+					topping[i] = $(this).val();
+		    })};
+		    
+		    if(crust!=undefined){
+				if(filling!=undefined){
+					$('.orderDiv').empty();
+					generateBill(crust,filling,topping);
+				}else{
+					alert("Please select any Filling");
+				}
+			}else{
+				alert("Please select any crust");
+			}
+		    
+		}
+//------------------------------------INVOICE------------------------------------------------------------------------------		
+		function generateBill(crust,filling,topping){
+			
+			var line1=$('<p/>').text('INVOICE');
+			var crustBill=$('<p/>').text('Crust	:'+crust+'	'+price.get(crust));
+			var fillingBill=$('<p/>').text('Filling	:'+filling+'	'+price.get(filling));
+			finalDiv(line1,crustBill,fillingBill);
+			
+			var toppingTotal=0;
+			var isAlreadyAvailable=true;
+			for(let i=0;i<topping.length;i++){
+				if(topping.length===3 && (topping[i]==='Tomato' || topping[i]==='Cabbage') && isAlreadyAvailable){
+					isAlreadyAvailable=false;
+					toppingBill=$('<p/>').text('Topping	:'+topping[i]+'	'+0);
+					toppingTotal+=0;
+					finalDiv(toppingBill);
+				}else{
+					toppingBill=$('<p/>').text('Topping	:'+topping[i]+'	'+price.get(topping[i]));
+					toppingTotal+=price.get(topping[i]);
+					finalDiv(toppingBill);
+				}				
+			}
+			total=price.get(crust)+price.get(filling)+toppingTotal;
+			total+=(9/100)*total;
+			var gst=$('<p/>').text('GST	:	'+(9*total)/100);
+			var totalBill=$('<p/>').text('Total	:'+'	'+total);
+			finalDiv(gst,totalBill);
+		}
+		
+		
+	</script>
+</body>
+</html>
